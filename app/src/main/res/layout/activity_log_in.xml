@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.project494.LogIn">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:background="@mipmap/longbeach">
+
+    </android.support.constraint.ConstraintLayout>
+
+    <EditText
+        android:id="@+id/UserName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/Passcode"
+        android:layout_alignLeft="@+id/Passcode"
+        android:layout_alignStart="@+id/Passcode"
+        android:ems="10"
+        android:hint="User Name/ Email"
+        android:inputType="textPersonName" />
+
+    <Button
+        android:id="@+id/LogIn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/NotHaveAnAccount"
+        android:layout_centerHorizontal="true"
+        android:background="#FF009688"
+        android:onClick="OnMainToMapButton"
+        android:text="Log in" />
+
+    <TextView
+        android:id="@+id/NotHaveAnAccount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="11dp"
+        android:onClick="OnMainToRegisterTextView"
+        android:text="Not Have An Account?"
+        android:textSize="18sp" />
+
+    <EditText
+        android:id="@+id/Passcode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/LogIn"
+        android:layout_centerHorizontal="true"
+        android:ems="10"
+        android:hint="Passcode"
+        android:inputType="textPersonName" />
+</RelativeLayout>

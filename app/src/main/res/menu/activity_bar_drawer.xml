@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/trips"
+            android:icon="@drawable/ic_bicycle_facing_right"
+            android:title="Trips" />
+        <item
+            android:id="@+id/wallet"
+            android:icon="@drawable/ic_wallet"
+            android:title="Wallet" />
+        <item
+            android:id="@+id/promotion"
+            android:icon="@drawable/ic_menu_share"
+            android:title="Promotion" />
+    </group>
+
+    <item
+        android:id="@+id/support"
+        android:title="Support">
+        <menu>
+            <item
+                android:id="@+id/report"
+                android:icon="@drawable/ic_clinic_history"
+                android:title="Report" />
+            <item
+                android:id="@+id/contact"
+                android:icon="@drawable/ic_telephone"
+                android:title="Contact" />
+        </menu>
+    </item>
+
+</menu>
