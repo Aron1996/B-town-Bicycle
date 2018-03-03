@@ -1,10 +1,11 @@
 package com.example.project494;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -20,7 +21,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -50,6 +50,7 @@ public class Bar extends AppCompatActivity
     Marker mCurrLocationMarker;
     LocationRequest mLocationRequest;
     ImageView user;
+    TextView userName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +61,11 @@ public class Bar extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
+        Intent intent = getIntent();
+        String username = intent.getStringExtra("username");
+
+
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         View hView =  navigationView.getHeaderView(0);
         user = (ImageView) hView.findViewById(R.id.userHead);
@@ -67,9 +73,12 @@ public class Bar extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 Intent mIntent = new Intent(Bar.this, User.class);
+                mIntent.putExtra("flag","disable");
                 startActivity(mIntent);
             }
         });
+        userName = (TextView)hView.findViewById(R.id.bar_userName);
+        userName.setText(username);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -98,12 +107,6 @@ public class Bar extends AppCompatActivity
 
 
     }
-    public void OnBarToUser(View view) {
-        Intent mIntent = new Intent(this, User.class);
-        startActivity(mIntent);
-
-    }
-
 
 
     @Override

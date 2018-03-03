@@ -6,48 +6,29 @@
     android:layout_height="match_parent"
  >
 
-    <android.support.constraint.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="350dp"
-        android:background="@mipmap/longbeach">
-
-
-    </android.support.constraint.ConstraintLayout>
-
     <EditText
-        android:id="@+id/UserName"
+        android:id="@+id/bar_userName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/Passcode"
+        android:layout_above="@+id/Register"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="44dp"
+        android:layout_marginBottom="138dp"
         android:ems="10"
         android:hint="User Name"
         android:inputType="textPersonName" />
 
-    <EditText
-        android:id="@+id/Email"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/Passcode"
-        android:layout_alignLeft="@+id/UserName"
-        android:layout_alignStart="@+id/UserName"
-        android:ems="10"
-        android:hint="Email"
-        android:inputType="textPersonName" />
-
     <Button
-        android:id="@+id/LogIn"
+        android:id="@+id/Register"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/NotHaveAnAccount"
+        android:layout_above="@+id/haveAccount"
         android:layout_centerHorizontal="true"
-        android:background="#FF009688"
+        android:background="#F07F5B"
         android:onClick="OnMainToLoginButton"
         android:text="Register" />
 
     <TextView
-        android:id="@+id/NotHaveAnAccount"
+        android:id="@+id/haveAccount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -58,13 +39,69 @@
         android:textSize="18sp" />
 
     <EditText
-        android:id="@+id/Passcode"
+        android:id="@+id/phoneNumber"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/LogIn"
-        android:layout_alignLeft="@+id/Email"
-        android:layout_alignStart="@+id/Email"
+        android:layout_alignTop="@+id/bar_userName"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="47dp"
         android:ems="10"
-        android:hint="Passcode"
-        android:inputType="textPersonName" />
+        android:hint="Phone Number"
+        android:inputType="phone" />
+
+    <EditText
+        android:id="@+id/password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/phoneNumber"
+        android:layout_alignStart="@+id/phoneNumber"
+        android:layout_below="@+id/phoneNumber"
+        android:ems="10"
+        android:hint="Password "
+        android:inputType="textPassword" />
+
+    <EditText
+        android:id="@+id/ConfirmPassord"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/password"
+        android:layout_alignStart="@+id/password"
+        android:layout_below="@+id/password"
+        android:ems="10"
+        android:hint="Confirm Password"
+        android:inputType="textPassword" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="140dp"
+        android:layout_height="100dp"
+        android:layout_above="@+id/imageView2"
+        android:layout_toLeftOf="@+id/imageView4"
+        android:layout_toStartOf="@+id/imageView4"
+        android:scaleType="center"
+        android:visibility="visible"
+        app:srcCompat="@drawable/l" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="400dp"
+        android:layout_height="200dp"
+        android:layout_above="@+id/bar_userName"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        app:srcCompat="@drawable/samplegates" />
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/imageView2"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="14dp"
+        android:layout_marginRight="14dp"
+        app:srcCompat="@drawable/t" />
+
+
 </RelativeLayout>
