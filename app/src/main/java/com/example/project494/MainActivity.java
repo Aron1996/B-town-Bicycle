@@ -20,6 +20,8 @@ public class MainActivity extends AppCompatActivity {
 
     EditText PhoneNumber, Username, Password, ConfirmPass;
     TextView HaveAccount;
+    private static final boolean USE_FLAG = true;
+    private static final int mFlag = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
                             if (success && !(username.equals("")||phone.equals("")||password.equals("")||!password.equals(confirmPass))) {
                                 Intent intent = new Intent(MainActivity.this, LogIn.class);
                                 MainActivity.this.startActivity(intent);
+
                             } else {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                                 if (username.equals("")){

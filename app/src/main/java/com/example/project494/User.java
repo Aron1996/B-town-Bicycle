@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -57,17 +58,18 @@ public class User extends AppCompatActivity {
         dateob = (EditText)findViewById(R.id.dob);
         dateob.setText(dob);
 
-        e_mail.setEnabled(false);
-        phone_num.setEnabled(false);
-        gder.setEnabled(false);
-        dateob.setEnabled(false);
+        e_mail.setFocusableInTouchMode(false);
+        phone_num.setFocusableInTouchMode(false);
+        //gder.setFocusableInTouchMode(false);
+        gder.setFocusableInTouchMode(false);
+        dateob.setFocusableInTouchMode(false);
     }
 
     public void editButtonClick(View view){
-        e_mail.setEnabled(true);
-        phone_num.setEnabled(true);
-        gder.setEnabled(true);
-        dateob.setEnabled(true);
+        e_mail.setFocusableInTouchMode(true);
+        gder.setFocusableInTouchMode(true);
+        dateob.setFocusableInTouchMode(true);
+        phone_num.setFocusableInTouchMode(true);
     }
 
     public void saveButtonClick(View view){
@@ -83,6 +85,7 @@ public class User extends AppCompatActivity {
                 try {
                     JSONObject jsonResponse = new JSONObject(response);
                     boolean success = jsonResponse.getBoolean("success");
+
                     if (success ) {
                         Toast.makeText(User.this , "record submitted", Toast.LENGTH_LONG).show();
                     }
@@ -95,10 +98,14 @@ public class User extends AppCompatActivity {
         UserRequest userRequest = new UserRequest(userID, E_mail, Phone_num,Gder ,Dateob, responseListener);
         RequestQueue queue = Volley.newRequestQueue(User.this);
         queue.add(userRequest);
-        e_mail.setEnabled(false);
-        phone_num.setEnabled(false);
-        gder.setEnabled(false);
-        dateob.setEnabled(false);
+        e_mail.setFocusableInTouchMode(false);
+        e_mail.setFocusable(false);
+        phone_num.setFocusableInTouchMode(false);
+        phone_num.setFocusable(false);
+        gder.setFocusableInTouchMode(false);
+        gder.setFocusable(false);
+        dateob.setFocusableInTouchMode(false);
+        dateob.setFocusable(false);
     }
 
     public void deleteButtonClick(View view){
@@ -107,7 +114,9 @@ public class User extends AppCompatActivity {
             public void onResponse(String response) {
                 try {
                     JSONObject jsonResponse = new JSONObject(response);
+                    Log.e("SSS",jsonResponse.toString());
                     boolean success = jsonResponse.getBoolean("success");
+                    Log.e("SS","a:"+success);
                     if (success ) {
                         Toast.makeText(User.this , "record deleted", Toast.LENGTH_LONG).show();
                     }

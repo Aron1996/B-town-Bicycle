@@ -61,6 +61,7 @@
                 android:layout_gravity="center_vertical"
                 android:paddingLeft="10dp"
                 android:text="batman@gmail.com"
+
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -102,7 +103,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:paddingLeft="10dp"
-                android:text="Male" />
+                android:text="Male"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
@@ -122,7 +124,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:paddingLeft="10dp"
-                android:text="02/15/1985" />
+                android:text="02/15/1985"
+                android:textStyle="bold" />
 
         </LinearLayout>
 

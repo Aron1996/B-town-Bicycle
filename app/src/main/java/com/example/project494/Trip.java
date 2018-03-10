@@ -2,8 +2,10 @@ package com.example.project494;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,9 +31,10 @@ import java.util.Map;
 public class Trip extends AppCompatActivity {
 
     ListView listView;
-    String userID, username, phonenumber,date_ride, id, distance, cost;
-    static ArrayList<Tripentry> tripList = new ArrayList<>();
+    String userID, username, phonenumber, date_ride, id, distance, cost;
+    ArrayList<Tripentry> tripList;
     Tripentry trip;
+    ThreeColumn_ListAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +42,10 @@ public class Trip extends AppCompatActivity {
         setContentView(R.layout.activity_trip);
 
         listView = (ListView) findViewById(R.id.lv);
+        tripList = new ArrayList<>();
+
+        adapter = new ThreeColumn_ListAdapter(Trip.this, R.layout.list_adapter_view, tripList);
+        listView.setAdapter(adapter);
 
         SharedPreferences sharedPref = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
 
@@ -46,14 +53,19 @@ public class Trip extends AppCompatActivity {
         username = sharedPref.getString("username", "");
         phonenumber = sharedPref.getString("phonenumber", "");
 
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+
         Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
                     JSONArray jArray = new JSONArray(response);
-                    if(jArray.length() == 0){
-                        Toast.makeText(Trip.this,"Doesn't have any record yet",Toast.LENGTH_SHORT).show();
-                    }else {
+                    if (jArray.length() == 0) {
+                        Toast.makeText(Trip.this, "Doesn't have any record yet", Toast.LENGTH_SHORT).show();
+                    } else {
                         for (int i = 0; i < jArray.length(); i++) {
                             try {
                                 JSONObject oneObject = jArray.getJSONObject(i);
@@ -62,37 +74,23 @@ public class Trip extends AppCompatActivity {
                                 distance = oneObject.getString("distance");
                                 cost = oneObject.getString("cost");
                                 trip = new Tripentry(date_ride, id, distance, cost);
+
                                 tripList.add(trip);
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
                         }
-                        ThreeColumn_ListAdapter adapter = new ThreeColumn_ListAdapter(Trip.this, R.layout.list_adapter_view, tripList);
-                        listView.setAdapter(adapter);
-                    }
+
+                    }adapter.notifyDataSetChanged();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
         };
-
-
-
         TripRequest tripRequest = new TripRequest(userID, responseListener);
         RequestQueue queue = Volley.newRequestQueue(Trip.this);
         queue.add(tripRequest);
-
-
-
-        /*Toast.makeText(Trip.this,tripList.size()+"", Toast.LENGTH_LONG).show();
-        ThreeColumn_ListAdapter adapter = new ThreeColumn_ListAdapter(Trip.this, R.layout.list_adapter_view, tripList);
-        listView.setAdapter(adapter);*/
-
-    }
-
-    public static void main(String[] args){
-        System.out.println(tripList.size());
     }
 }
 class Tripentry {

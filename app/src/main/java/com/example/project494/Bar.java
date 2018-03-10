@@ -51,6 +51,7 @@ public class Bar extends AppCompatActivity
     LocationRequest mLocationRequest;
     ImageView user;
     TextView userName;
+    private static final int mFlag = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,6 +150,7 @@ public class Bar extends AppCompatActivity
 
         if (id == R.id.trips) {
             Intent mIntent = new Intent(this, Trip.class);
+            mIntent.addFlags(mFlag);
             startActivity(mIntent);
         } else if (id == R.id.wallet) {
             Intent mIntent = new Intent(this, Wallet.class);
