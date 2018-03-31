@@ -67,12 +67,13 @@ public class LogIn extends AppCompatActivity {
                                 String dob = jsonResponse.getString("dob");
 
                                 Intent intent = new Intent(LogIn.this, Bar.class);
-                                LogIn.this.startActivity(intent);
+
 
                                 SharedPreferences sharedPref = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
 
                                 intent.putExtra("username", name);
-                                LogIn.this.startActivity(intent);
+                                intent.putExtra("userID", id);
+
 
                                 SharedPreferences.Editor editor = sharedPref.edit();
                                 editor.putString("username", name);
@@ -83,6 +84,7 @@ public class LogIn extends AppCompatActivity {
                                 editor.putString("dob", dob);
 
                                 editor.apply();
+                                LogIn.this.startActivity(intent);
                             } else {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(LogIn.this);
                                 if (username.equals("")) {
@@ -97,7 +99,7 @@ public class LogIn extends AppCompatActivity {
                                             .show();
                                 } else {
                                     builder.setMessage("Login Failed")
-                                            .setNegativeButton("Retry", null)
+                                            .setNegativeButton("Please Retry", null)
                                             .create()
                                             .show();
                                 }

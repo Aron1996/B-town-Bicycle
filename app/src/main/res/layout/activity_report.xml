@@ -20,6 +20,7 @@
             android:layout_alignStart="@+id/bikeID"
             android:layout_marginTop="20dp"
             android:text="Bike Number"
+            android:textColor="@android:color/black"
             android:textSize="30sp" />
 
         <EditText
@@ -45,6 +46,7 @@
             android:layout_below="@+id/bikeID"
             android:layout_marginTop="13dp"
             android:text="Broken part"
+            android:textColor="@android:color/black"
             android:textSize="30sp" />
 
         <EditText
@@ -67,6 +69,7 @@
             android:layout_alignStart="@+id/broken_part"
             android:layout_below="@+id/textView4"
             android:layout_marginTop="97dp"
+            android:textColor="@android:color/black"
             android:text="Description"
             android:textSize="30sp" />
 

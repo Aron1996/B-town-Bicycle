@@ -1,10 +1,14 @@
 package com.example.project494;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,6 +16,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -22,21 +28,39 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 public class Bar extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback,
@@ -51,7 +75,13 @@ public class Bar extends AppCompatActivity
     LocationRequest mLocationRequest;
     ImageView user;
     TextView userName;
+    String status, unlock, userID;
+    SharedPreferences sharedPref;
+    Double lat, longi;
+    LatLng now;
+    private Marker marker;
     private static final int mFlag = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT;
+    LinearLayout topbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,23 +92,28 @@ public class Bar extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        sharedPref = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
+        //userID = sharedPref.getString("id", "");
+
 
         Intent intent = getIntent();
         String username = intent.getStringExtra("username");
+        userID = intent.getStringExtra("userID");
 
+        topbar = (LinearLayout)findViewById(R.id.topbar);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        View hView =  navigationView.getHeaderView(0);
+        View hView = navigationView.getHeaderView(0);
         user = (ImageView) hView.findViewById(R.id.userHead);
-        user.setOnClickListener(new View.OnClickListener(){
+        user.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent mIntent = new Intent(Bar.this, User.class);
-                mIntent.putExtra("flag","disable");
+                mIntent.putExtra("flag", "disable");
                 startActivity(mIntent);
             }
         });
-        userName = (TextView)hView.findViewById(R.id.bar_userName);
+        userName = (TextView) hView.findViewById(R.id.bar_userName);
         userName.setText(username);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -106,7 +141,26 @@ public class Bar extends AppCompatActivity
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        Response.Listener<String> responseListener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONArray jArray = new JSONArray(response);
+                    JSONObject oneObject = jArray.getJSONObject(0);
+                    lat = oneObject.getDouble("Latitude");
+                    longi = oneObject.getDouble("Longitude");
 
+                    Log.d("lat", Double.toString(lat));
+                    Log.d("longi",Double.toString(longi));
+                    now = new LatLng(lat, longi);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        getLocation getlocation = new getLocation(responseListener);
+        RequestQueue queue = Volley.newRequestQueue(Bar.this);
+        queue.add(getlocation);
     }
 
 
@@ -174,10 +228,20 @@ public class Bar extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    public Bitmap resizeMapIcons(int width, int height) {
+        BitmapDrawable bitmapdraw = (BitmapDrawable) getResources().getDrawable(R.mipmap.ic_bike_round);
+        Bitmap b = bitmapdraw.getBitmap();
+        Bitmap resizedBitmap = Bitmap.createScaledBitmap(b, width, height, false);
+        return resizedBitmap;
+    }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
+
         mMap = googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+
 
         //Initialize Google Play Services
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -187,12 +251,14 @@ public class Bar extends AppCompatActivity
                 buildGoogleApiClient();
                 mMap.setMyLocationEnabled(true);
             }
-        }
-        else {
+        } else {
             buildGoogleApiClient();
             mMap.setMyLocationEnabled(true);
         }
+
+
     }
+
 
     protected synchronized void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -216,6 +282,100 @@ public class Bar extends AppCompatActivity
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
         }
 
+        marker = mMap.addMarker(new MarkerOptions()
+                .position(now)
+                .title("Bike")
+                .snippet("Avaliable to use ")
+                .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_bike_round)));
+
+        mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
+            Float lastZoomLevel = 1f;
+
+            @Override
+            public void onCameraIdle() {
+                Float zoomLevel = mMap.getCameraPosition().zoom;
+                if (zoomLevel != lastZoomLevel) {
+                    lastZoomLevel = zoomLevel;
+                    marker.remove();
+                    marker = mMap.addMarker(new MarkerOptions()
+                            .position(now)
+                            .title("Bike")
+                            .snippet(bikeStatus()+" to use ")
+                            .icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons(Math.round(lastZoomLevel)*6, Math.round(lastZoomLevel) * 6))));
+
+                }
+            }
+        });
+
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(now));
+                mMap.animateCamera(CameraUpdateFactory.zoomTo(16));
+                topbar.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(now));
+                mMap.animateCamera(CameraUpdateFactory.zoomTo(18));
+
+                topbar.setVisibility(View.VISIBLE);
+
+
+                AlertDialog.Builder builder;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    builder = new AlertDialog.Builder(Bar.this, android.R.style.Theme_Material_Dialog_Alert);
+                } else {
+                    builder = new AlertDialog.Builder(Bar.this);
+                }
+                Log.e("A",bikeStatus());
+                if (bikeStatus().equals("yes")){
+                    builder.setTitle("Avaliable to use")
+                            .setMessage("Do you want to use this vehicle?")
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+                                    Response.Listener<String> responseListener = new Response.Listener<String>() {
+                                        @Override
+                                        public void onResponse(String response) {
+                                            Log.e("B",response);
+                                        }
+
+                                    };
+                                    addTrip addtrip = new addTrip("1", userID, date, "1", "10","3",responseListener);
+                                    RequestQueue queue = Volley.newRequestQueue(Bar.this);
+//                                    queue.setShouldCache(false);
+                                    queue.getCache().clear();
+                                    queue.add(addtrip);
+
+                                }
+                            })
+                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                }
+                            })
+                            .show();
+
+                }
+                else{
+                    builder.setTitle("Not avaliable right now")
+                            .setMessage("Click ok to exit")
+                            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
+                }
+
+                return true;
+            }
+        });
     }
 
     @Override
@@ -241,6 +401,8 @@ public class Bar extends AppCompatActivity
 
         //move map camera
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+
+        Log.e("location", Double.toString(location.getLatitude()) + " " + Double.toString(location.getLongitude()));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
 
         //stop location updates
@@ -256,7 +418,8 @@ public class Bar extends AppCompatActivity
     }
 
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
-    public boolean checkLocationPermission(){
+
+    public boolean checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -320,4 +483,65 @@ public class Bar extends AppCompatActivity
             // You can add here other case statements according to your requirement.
         }
     }
+
+    public String bikeStatus() {
+        Response.Listener<String> responseListener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+                try {
+                    JSONObject jsonResponse = new JSONObject(response);
+                    status = jsonResponse.getString("status");
+                    unlock = jsonResponse.getString("unlock_code");
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        };
+        BikeActivity bikeActivity = new BikeActivity("1", responseListener);
+        RequestQueue queue = Volley.newRequestQueue(Bar.this);
+        queue.getCache().clear();
+        queue.add(bikeActivity);
+
+        return status;
+    }
+}
+
+class addTrip extends StringRequest {
+    private static final String LOGIN_REQUEST_URL = "http://cgi.soic.indiana.edu/~yaokzhan/team32/addriding.php";
+    private Map<String, String> params;
+
+    public addTrip(String bike_id, String user_id, String time, String distance, String duration, String cost, Response.Listener<String>listener) {
+        super(Request.Method.POST, LOGIN_REQUEST_URL, listener, null);
+        params = new HashMap<>();
+        params.put("bike_id", bike_id);
+        params.put("user_id", user_id);
+        params.put("time", time);
+        params.put("distance", distance);
+        params.put("duration", duration);
+        params.put("cost", cost);
+    }
+
+    @Override
+    public Map<String, String> getParams() {
+        return params;
+    }
+
+}
+class getLocation extends StringRequest {
+    private static final String LOGIN_REQUEST_URL = "http://cgi.soic.indiana.edu/~yaokzhan/team32/locationSelect.php";
+    private Map<String, String> params;
+
+    public getLocation(Response.Listener<String>listener) {
+        super(Request.Method.POST, LOGIN_REQUEST_URL, listener, null);
+        params = new HashMap<>();
+    }
+
+    @Override
+    public Map<String, String> getParams() {
+        return params;
+    }
+
 }

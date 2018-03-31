@@ -20,8 +20,9 @@
             android:layout_marginLeft="35dp"
             android:layout_marginStart="35dp"
             android:layout_marginTop="41dp"
-            android:text="My Wallet:"
+            android:text="My Wallet"
             android:textSize="30sp"
+            android:textColor="@android:color/black"
             android:textStyle="bold" />
 
         <TextView
@@ -33,17 +34,17 @@
             android:layout_below="@+id/textView15"
             android:layout_marginTop="50dp"
             android:text="Balance:"
-            android:textSize="20sp" />
+            android:textColor="@android:color/black"
+            android:textSize="25sp" />
 
         <TextView
-            android:id="@+id/textView17"
+            android:id="@+id/balance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@+id/textView16"
             android:layout_alignBottom="@+id/textView16"
             android:layout_toEndOf="@+id/textView15"
             android:layout_toRightOf="@+id/textView15"
-            android:text="10$"
             android:textSize="20sp" />
 
         <TextView
@@ -55,12 +56,13 @@
             android:layout_below="@+id/textView16"
             android:layout_marginTop="83dp"
             android:text="Add money:"
+            android:textColor="@android:color/black"
             android:textSize="25sp" />
 
         <EditText
-            android:id="@+id/editText4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/moneyAdd"
+            android:layout_width="320dp"
+            android:layout_height="50dp"
             android:layout_alignLeft="@+id/textView18"
             android:layout_alignStart="@+id/textView18"
             android:layout_below="@+id/textView18"
@@ -69,14 +71,25 @@
             android:inputType="number" />
 
         <Button
-            android:id="@+id/button4"
+            android:id="@+id/pay"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/moneyAdd"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="59dp"
+            android:background="#F07F5B"
+            android:text="Pay" />
+
+        <TextView
+            android:id="@+id/textView19"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/editText4"
-            android:layout_alignStart="@+id/editText4"
-            android:layout_below="@+id/editText4"
-            android:layout_marginTop="30dp"
-            android:text="Pay" />
+            android:layout_alignTop="@+id/textView16"
+            android:layout_marginTop="7dp"
+            android:layout_toEndOf="@+id/balance"
+            android:layout_toRightOf="@+id/balance"
+            android:text="$"
+            android:textSize="18sp" />
 
     </RelativeLayout>
 </android.support.constraint.ConstraintLayout>

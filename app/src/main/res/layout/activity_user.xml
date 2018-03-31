@@ -162,18 +162,6 @@
             android:text="Save"
             android:textColor="#fff" />
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_weight="1"
-            android:background="@drawable/buttonstyleithgradient"
-            android:onClick="deleteButtonClick"
-            android:text="Delete"
-            android:textColor="#fff" />
-
 
     </LinearLayout>
 

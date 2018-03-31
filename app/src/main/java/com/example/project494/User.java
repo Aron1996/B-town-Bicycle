@@ -108,28 +108,6 @@ public class User extends AppCompatActivity {
         dateob.setFocusable(false);
     }
 
-    public void deleteButtonClick(View view){
-        Response.Listener<String> responseListener = new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-                    JSONObject jsonResponse = new JSONObject(response);
-                    Log.e("SSS",jsonResponse.toString());
-                    boolean success = jsonResponse.getBoolean("success");
-                    Log.e("SS","a:"+success);
-                    if (success ) {
-                        Toast.makeText(User.this , "record deleted", Toast.LENGTH_LONG).show();
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-
-        UserRequest2 userRequest2 = new UserRequest2(userID, responseListener);
-        RequestQueue queue = Volley.newRequestQueue(User.this);
-        queue.add(userRequest2);
-    }
 
 }
 

@@ -15,7 +15,8 @@
         android:layout_marginBottom="12dp"
         android:ems="10"
         android:hint="UserName"
-        android:inputType="textPersonName" />
+        android:inputType="textPersonName"
+        android:text="asdf" />
 
     <Button
         android:id="@+id/Register"
@@ -46,7 +47,8 @@
         android:layout_marginBottom="11dp"
         android:ems="10"
         android:hint="Password"
-        android:inputType="textPassword" />
+        android:inputType="textPassword"
+        android:text="asdf" />
 
     <ImageView
         android:id="@+id/imageView"
