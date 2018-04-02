@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -30,7 +31,7 @@ public class Wallet extends AppCompatActivity {
     TextView bal;
     EditText money;
     Button pay;
-    int moneyleft;
+    int moneyleft, newnwemoney;
     String userID, newmoney;
 
     @Override
@@ -45,8 +46,6 @@ public class Wallet extends AppCompatActivity {
         SharedPreferences sharedPref = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
 
         userID = sharedPref.getString("id", "");
-
-        newmoney = money.getText().toString();
 
         Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
@@ -78,14 +77,17 @@ public class Wallet extends AppCompatActivity {
         pay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                newmoney = money.getText().toString();
+                newnwemoney = Integer.parseInt(newmoney);
+                moneyleft += newnwemoney;
                 Response.Listener<String> responseListener = new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         try {
                             JSONObject jsonResponse = new JSONObject(response);
                             boolean success = jsonResponse.getBoolean("success");
-                            if (success ) {
-                                //bal.setText(Integer.toString(moneyleft + Integer.parseInt(newmoney)));
+                            if (success && !(newmoney.equals(""))) {
+                                bal.setText(String.format("%d", moneyleft));
                                 Toast.makeText(Wallet.this, "money submitted", Toast.LENGTH_LONG).show();
                             } else {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(Wallet.this);
@@ -101,7 +103,7 @@ public class Wallet extends AppCompatActivity {
                         }
                     }
                 };
-                paymentADD paymentaDD = new paymentADD(userID, newmoney, responseListener);
+                paymentADD paymentaDD = new paymentADD(userID, Integer.toString(moneyleft), responseListener);
                 RequestQueue queue = Volley.newRequestQueue(Wallet.this);
                 queue.add(paymentaDD);
             }

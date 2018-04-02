@@ -31,7 +31,7 @@ import java.util.Map;
 public class Trip extends AppCompatActivity {
 
     ListView listView;
-    String userID, username, phonenumber, date_ride, id, distance, cost;
+    String userID, username, phonenumber, date_ride, id, duration, cost;
     ArrayList<Tripentry> tripList;
     Tripentry trip;
     ThreeColumn_ListAdapter adapter;
@@ -71,9 +71,9 @@ public class Trip extends AppCompatActivity {
                                 JSONObject oneObject = jArray.getJSONObject(i);
                                 date_ride = oneObject.getString("date_ride");
                                 id = oneObject.getString("bike_id");
-                                distance = oneObject.getString("distance");
+                                duration = oneObject.getString("duration");
                                 cost = oneObject.getString("cost");
-                                trip = new Tripentry(date_ride, id, distance, cost);
+                                trip = new Tripentry(date_ride, id, duration, cost);
 
                                 tripList.add(trip);
 

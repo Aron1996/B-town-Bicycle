@@ -17,17 +17,54 @@
         tools:context="com.example.project494.MapsActivity" />
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
         android:id="@+id/topbar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
         android:background="@color/startorange"
         android:visibility="invisible">
+
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="100dp"
-            android:text="0 min 0.0 USD"
-            android:textColor="@android:color/white"/>
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:text="Avaliable to use"
+            android:id="@+id/condition"
+            android:textColor="@android:color/black" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/use"
+            android:layout_marginLeft="40dp"
+            android:text="Use bicycle"/>
+    </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/topbar2"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/startorange"
+        android:visibility="invisible">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Time Spent:"
+            android:textSize="20sp"
+            android:textColor="@android:color/black"/>
+        <Chronometer
+            android:id="@+id/chronometer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:textSize="20sp"
+            android:paddingTop="8dp"
+            android:paddingLeft="2dp"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:id="@+id/stop"
+            android:text="Stop Using"/>
     </LinearLayout>
 
 

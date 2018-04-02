@@ -12,6 +12,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -27,6 +28,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.Chronometer;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -81,8 +84,11 @@ public class Bar extends AppCompatActivity
     LatLng now;
     private Marker marker;
     private static final int mFlag = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT;
-    LinearLayout topbar;
-
+    LinearLayout topbar, topbar2;
+    int BICYCLESTATE = 0;
+    TextView con;
+    Button useBicycle, stopuseBicycle;
+    Chronometer myChronometer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,6 +107,12 @@ public class Bar extends AppCompatActivity
         userID = intent.getStringExtra("userID");
 
         topbar = (LinearLayout)findViewById(R.id.topbar);
+        topbar2 = (LinearLayout)findViewById(R.id.topbar2);
+        con = (TextView)findViewById(R.id.condition);
+        useBicycle = (Button)findViewById(R.id.use);
+        stopuseBicycle=(Button)findViewById(R.id.stop);
+        myChronometer = (Chronometer)findViewById(R.id.chronometer);
+
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         View hView = navigationView.getHeaderView(0);
@@ -115,15 +127,6 @@ public class Bar extends AppCompatActivity
         });
         userName = (TextView) hView.findViewById(R.id.bar_userName);
         userName.setText(username);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -323,7 +326,9 @@ public class Bar extends AppCompatActivity
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(now));
                 mMap.animateCamera(CameraUpdateFactory.zoomTo(18));
 
-                topbar.setVisibility(View.VISIBLE);
+                if (BICYCLESTATE == 0){
+                    topbar.setVisibility(View.VISIBLE);
+                }
 
 
                 AlertDialog.Builder builder;
@@ -334,11 +339,41 @@ public class Bar extends AppCompatActivity
                 }
                 Log.e("A",bikeStatus());
                 if (bikeStatus().equals("yes")){
-                    builder.setTitle("Avaliable to use")
-                            .setMessage("Do you want to use this vehicle?")
-                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+                    con.setText("Avaliable to use");
+                    useBicycle.setVisibility(View.VISIBLE);
+
+                    useBicycle.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            BICYCLESTATE =1;
+                            topbar.setVisibility(View.INVISIBLE);
+                            topbar2.setVisibility(View.VISIBLE);
+                            myChronometer.setBase(SystemClock.elapsedRealtime());
+                            myChronometer.start();
+                            Response.Listener<String> responseListener = new Response.Listener<String>() {
+                                @Override
+                                public void onResponse(String response) {
+                                    Log.e("B",response);
+                                }
+
+                            };
+                            addTrip addtrip = new addTrip("1", userID, "", "1", "","3", Integer.toString(BICYCLESTATE),responseListener);
+                            RequestQueue queue = Volley.newRequestQueue(Bar.this);
+                            queue.add(addtrip);
+                        }
+                    });
+
+                    stopuseBicycle.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            BICYCLESTATE =0;
+                            long elapsedMillis = SystemClock.elapsedRealtime() - myChronometer.getBase();
+                            Toast.makeText(Bar.this, "Elapsed milliseconds: " + elapsedMillis,
+                                    Toast.LENGTH_SHORT).show();
+                            myChronometer.stop();
+                            myChronometer.setBase(SystemClock.elapsedRealtime());
+                            topbar2.setVisibility(View.INVISIBLE);
+                            String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
                                     Response.Listener<String> responseListener = new Response.Listener<String>() {
                                         @Override
                                         public void onResponse(String response) {
@@ -346,33 +381,18 @@ public class Bar extends AppCompatActivity
                                         }
 
                                     };
-                                    addTrip addtrip = new addTrip("1", userID, date, "1", "10","3",responseListener);
+                                    addTrip addtrip = new addTrip("1", userID, date, "1", Long.toString(elapsedMillis/1000),"3", Integer.toString(BICYCLESTATE),responseListener);
                                     RequestQueue queue = Volley.newRequestQueue(Bar.this);
-//                                    queue.setShouldCache(false);
-                                    queue.getCache().clear();
                                     queue.add(addtrip);
-
-                                }
-                            })
-                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                }
-                            })
-                            .show();
-
+                            Toast.makeText(Bar.this, "You finish this trip!", Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }
                 else{
-                    builder.setTitle("Not avaliable right now")
-                            .setMessage("Click ok to exit")
-                            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                }
-                            })
-                            .setIcon(android.R.drawable.ic_dialog_alert)
-                            .show();
-                }
+                    con.setText("Not avaliable to use");
+                    useBicycle.setVisibility(View.INVISIBLE);
 
+                }
                 return true;
             }
         });
@@ -502,7 +522,6 @@ public class Bar extends AppCompatActivity
         };
         BikeActivity bikeActivity = new BikeActivity("1", responseListener);
         RequestQueue queue = Volley.newRequestQueue(Bar.this);
-        queue.getCache().clear();
         queue.add(bikeActivity);
 
         return status;
@@ -513,7 +532,7 @@ class addTrip extends StringRequest {
     private static final String LOGIN_REQUEST_URL = "http://cgi.soic.indiana.edu/~yaokzhan/team32/addriding.php";
     private Map<String, String> params;
 
-    public addTrip(String bike_id, String user_id, String time, String distance, String duration, String cost, Response.Listener<String>listener) {
+    public addTrip(String bike_id, String user_id, String time, String distance, String duration, String cost, String state, Response.Listener<String>listener) {
         super(Request.Method.POST, LOGIN_REQUEST_URL, listener, null);
         params = new HashMap<>();
         params.put("bike_id", bike_id);
@@ -522,6 +541,7 @@ class addTrip extends StringRequest {
         params.put("distance", distance);
         params.put("duration", duration);
         params.put("cost", cost);
+        params.put("state", state);
     }
 
     @Override
