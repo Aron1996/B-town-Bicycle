@@ -1,6 +1,8 @@
 package com.example.project494;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
 
     EditText PhoneNumber, Username, Password, ConfirmPass;
     TextView HaveAccount;
+    SharedPreferences sharedPref;
     private static final boolean USE_FLAG = true;
     private static final int mFlag = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT;
     @Override
@@ -43,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        sharedPref = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
+
         bRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -50,6 +55,9 @@ public class MainActivity extends AppCompatActivity {
                 final String phone = PhoneNumber.getText().toString();
                 final String password = Password.getText().toString();
                 final String confirmPass = ConfirmPass.getText().toString();
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putString("username", "none");
+                editor.apply();
 
                 Response.Listener<String> responseListener = new Response.Listener<String>() {
                     @Override

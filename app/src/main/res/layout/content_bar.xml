@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/bar"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.project494.Bar">
 
@@ -19,52 +20,66 @@
     <LinearLayout
         android:id="@+id/topbar"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@color/startorange"
-        android:visibility="invisible">
+        android:layout_height="75dp"
+        android:background="@color/orange"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/bar">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="20sp"
             android:text="Avaliable to use"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="20dp"
             android:id="@+id/condition"
-            android:textColor="@android:color/black" />
+            android:textColor="@color/graylight" />
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:id="@+id/use"
-            android:layout_marginLeft="40dp"
-            android:text="Use bicycle"/>
+            android:layout_marginLeft="60dp"
+            android:layout_marginTop="15dp"
+            android:text="Use bicycle"
+            android:textColor="@color/orange"
+            android:background="@drawable/button_border"/>
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/topbar2"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@color/startorange"
-        android:visibility="invisible">
+        android:layout_height="75dp"
+        android:background="@color/orange"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/bar">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Time Spent:"
             android:textSize="20sp"
-            android:textColor="@android:color/black"/>
+            android:textColor="@color/graylight"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="15dp" />
         <Chronometer
             android:id="@+id/chronometer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:textSize="20sp"
-            android:paddingTop="8dp"
-            android:paddingLeft="2dp"/>
+            android:paddingTop="24dp"
+            android:paddingLeft="2dp"
+            android:textColor="@color/graylight"/>
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
+            android:layout_marginLeft="25dp"
             android:id="@+id/stop"
-            android:text="Stop Using"/>
+            android:text="Stop Using"
+            android:textColor="@color/orange"
+            android:background="@drawable/button_border"
+            android:layout_marginTop="15dp"
+            />
     </LinearLayout>
 
 

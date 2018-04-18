@@ -47,22 +47,44 @@ public class User extends AppCompatActivity {
         user.setText(username);
 
         e_mail = (EditText)findViewById(R.id.email);
-        e_mail.setText(email);
-
         phone_num = (EditText)findViewById(R.id.phone);
-        phone_num.setText(phonenumber);
-
         gder = (EditText)findViewById(R.id.gender);
-        gder.setText(gender);
-
         dateob = (EditText)findViewById(R.id.dob);
-        dateob.setText(dob);
+
 
         e_mail.setFocusableInTouchMode(false);
         phone_num.setFocusableInTouchMode(false);
         //gder.setFocusableInTouchMode(false);
         gder.setFocusableInTouchMode(false);
         dateob.setFocusableInTouchMode(false);
+
+        Response.Listener<String> responseListener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject jsonResponse = new JSONObject(response);
+                    boolean success = jsonResponse.getBoolean("success");
+
+                    if (success ) {
+                        phonenumber = jsonResponse.getString("phone");
+                        email = jsonResponse.getString("email");
+                        gender = jsonResponse.getString("gender");
+                        dob = jsonResponse.getString("dob");
+                        e_mail.setText(email);
+                        phone_num.setText(phonenumber);
+                        gder.setText(gender);
+                        dateob.setText(dob);
+
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        UserRequest userRequest = new UserRequest("1",userID, "", "","" ,"", responseListener);
+        RequestQueue queue = Volley.newRequestQueue(User.this);
+        queue.add(userRequest);
     }
 
     public void editButtonClick(View view){
@@ -78,6 +100,7 @@ public class User extends AppCompatActivity {
         final String Phone_num = phone_num.getText().toString();
         final String Gder = gder.getText().toString();
         final String Dateob = dateob.getText().toString();
+
 
         Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
@@ -95,7 +118,7 @@ public class User extends AppCompatActivity {
             }
         };
 
-        UserRequest userRequest = new UserRequest(userID, E_mail, Phone_num,Gder ,Dateob, responseListener);
+        UserRequest userRequest = new UserRequest("2",userID, E_mail, Phone_num,Gder ,Dateob, responseListener);
         RequestQueue queue = Volley.newRequestQueue(User.this);
         queue.add(userRequest);
         e_mail.setFocusableInTouchMode(false);
@@ -115,9 +138,10 @@ class UserRequest extends StringRequest {
     private static final String REGISTER_REQUEST_URL = "http://cgi.soic.indiana.edu/~yaokzhan/team32/User.php";
     private Map<String, String> params;
 
-    public UserRequest(String userID, String e_mail, String phone_num, String gder, String dateob, Response.Listener<String> listener) {
+    public UserRequest(String state, String userID, String e_mail, String phone_num, String gder, String dateob, Response.Listener<String> listener) {
         super(Request.Method.POST, REGISTER_REQUEST_URL, listener, null);
         params = new HashMap<>();
+        params.put("state", state);
         params.put("userID", userID);
         params.put("e_mail", e_mail);
         params.put("phone_num", phone_num);
@@ -130,18 +154,4 @@ class UserRequest extends StringRequest {
         return params;
     }
 }
-class UserRequest2 extends StringRequest {
-    private static final String REGISTER_REQUEST_URL = "http://cgi.soic.indiana.edu/~yaokzhan/team32/Delete.php";
-    private Map<String, String> params;
 
-    public UserRequest2( String userID, Response.Listener<String> listener) {
-        super(Request.Method.POST, REGISTER_REQUEST_URL, listener, null);
-        params = new HashMap<>();
-        params.put("userID", userID);
-    }
-
-    @Override
-    public Map<String, String> getParams() {
-        return params;
-    }
-}

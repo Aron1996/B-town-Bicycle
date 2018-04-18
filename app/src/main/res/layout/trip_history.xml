@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="70dp"
+    android:layout_marginBottom="4dp"
+    android:layout_marginLeft="@dimen/margin_2dp"
+    android:layout_marginRight="@dimen/margin_2dp"
+    android:background="#ffffff"
+    android:orientation="horizontal">
+
+
+    <ImageView
+        android:layout_width="30dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/ic_bookmark_black_24dp" />
+
+    <LinearLayout
+        android:layout_width="150dp"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="10dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/riding_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:fontFamily="sans-serif"
+            android:text="11/12/2018"
+            android:textColor="@color/lightblack"
+            android:textSize="22dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/bikeID"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_marginTop="-5dp"
+            android:fontFamily="sans-serif"
+            android:text="Bike 02"
+            android:textColor="@color/grey"
+            android:textSize="12dp"
+            android:textStyle="italic" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="5dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/duration"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="01:20 hr"
+            android:textColor="@color/lightblack"
+            android:textSize="20dp"
+
+            />
+
+        <TextView
+            android:id="@+id/riding_distance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-3dp"
+            android:text="2 miles"
+            android:textColor="@color/lightblack"
+            android:textSize="20dp" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="70dp"
+        android:layout_marginLeft="15dp"
+        android:src="@drawable/ic_attach_money_black_24dp" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/riding_cost"
+            android:layout_width="61dp"
+            android:layout_height="70dp"
+            android:layout_marginTop="12dp"
+            android:fontFamily="sans-serif"
+            android:text="10"
+            android:textColor="@color/lightblack"
+            android:textSize="33dp" />
+
+    </LinearLayout>
+
+
+</LinearLayout>

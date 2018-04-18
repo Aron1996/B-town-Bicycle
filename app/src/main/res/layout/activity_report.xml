@@ -27,12 +27,8 @@
             android:id="@+id/bikeID"
             android:layout_width="320dp"
             android:layout_height="50dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
             android:layout_below="@+id/textView3"
-            android:layout_marginEnd="22dp"
-            android:layout_marginRight="22dp"
-            android:layout_marginTop="13dp"
+            android:layout_centerHorizontal="true"
             android:ems="10"
             android:hint="Required field"
             android:inputType="number" />
@@ -44,7 +40,7 @@
             android:layout_alignLeft="@+id/bikeID"
             android:layout_alignStart="@+id/bikeID"
             android:layout_below="@+id/bikeID"
-            android:layout_marginTop="13dp"
+            android:layout_marginTop="8dp"
             android:text="Broken part"
             android:textColor="@android:color/black"
             android:textSize="30sp" />
@@ -56,7 +52,6 @@
             android:layout_alignLeft="@+id/textView4"
             android:layout_alignStart="@+id/textView4"
             android:layout_below="@+id/textView4"
-            android:layout_marginTop="14dp"
             android:ems="10"
             android:hint="Bicycle part(s)"
             android:inputType="text" />
@@ -67,10 +62,10 @@
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/broken_part"
             android:layout_alignStart="@+id/broken_part"
-            android:layout_below="@+id/textView4"
-            android:layout_marginTop="97dp"
-            android:textColor="@android:color/black"
+            android:layout_below="@+id/broken_part"
+            android:layout_marginTop="12dp"
             android:text="Description"
+            android:textColor="@android:color/black"
             android:textSize="30sp" />
 
         <EditText
@@ -80,24 +75,25 @@
             android:layout_alignLeft="@+id/textView5"
             android:layout_alignStart="@+id/textView5"
             android:layout_below="@+id/textView5"
-            android:layout_marginTop="21dp"
-            android:background="#C0C0C0"
+            android:layout_marginTop="16dp"
+            android:background="@color/lightgrey"
             android:ems="10"
-            android:hint="Details about broken part(s)"
+            android:hint="  Details about broken part(s)"
             android:inputType="text"
             android:paddingBottom="70dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
         <Button
             android:id="@+id/report"
-            android:layout_width="200dp"
+            android:layout_width="220dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/email"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="26dp"
-            android:background="#F07F5B"
+            android:layout_marginTop="27dp"
+            android:background="@drawable/border"
             android:onClick="onClickSubmit"
-            android:text="Report" />
+            android:text="Report"
+            android:textColor="@color/graylight" />
 
     </RelativeLayout>
 

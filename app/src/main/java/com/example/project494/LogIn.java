@@ -22,11 +22,25 @@ import org.json.JSONObject;
 public class LogIn extends AppCompatActivity {
 
     EditText Username, Password;
+    SharedPreferences sharedPref ;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
+        sharedPref = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
+
+
+        if (!sharedPref.getString("username","none").equals("none")){
+            Intent intent = new Intent(LogIn.this, Bar.class);
+
+            String name = sharedPref.getString("username",null);
+            String id = sharedPref.getString("id",null);
+            intent.putExtra("username", name);
+            intent.putExtra("userID", id);
+            startActivity(intent);
+        }
 
 
         Username = (EditText) findViewById(R.id.bar_userName);
@@ -69,7 +83,7 @@ public class LogIn extends AppCompatActivity {
                                 Intent intent = new Intent(LogIn.this, Bar.class);
 
 
-                                SharedPreferences sharedPref = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
+
 
                                 intent.putExtra("username", name);
                                 intent.putExtra("userID", id);

@@ -22,7 +22,8 @@ public class Promotion extends AppCompatActivity {
 
     EditText promCode;
     Button submit;
-    int moneyleft, newnwemoney;
+    int moneyleft;
+    String promotion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,56 +37,36 @@ public class Promotion extends AppCompatActivity {
 
         final String userID = sharedPref.getString("id", "");
 
-        final String promotion = promCode.getText().toString();
 
-        Response.Listener<String> responseListener = new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-                    JSONArray jArray = new JSONArray(response);
-                    if (jArray.length() == 0) {
-                        Toast.makeText(Promotion.this, "No money in wallet", Toast.LENGTH_SHORT).show();
-                    } else {
-                        for (int i = 0; i < jArray.length(); i++) {
-                            try {
-                                JSONObject oneObject = jArray.getJSONObject(i);
-                                moneyleft = oneObject.getInt("balance");
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+            submit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    promotion = promCode.getText().toString();
+                    if (promotion.equals("Y02Rjade")){
+                        Response.Listener<String> responseListener = new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                try {
+                                    JSONObject jsonResponse = new JSONObject(response);
+                                    boolean success = jsonResponse.getBoolean("success");
+                                    if (success) {
+                                        Toast.makeText(Promotion.this, "2 dollar add in wallet", Toast.LENGTH_SHORT).show();
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
                             }
-                        }
+                        };
+                        paymentADD paymentaDD = new paymentADD(userID, "2", "1",responseListener);
+                        moneyleft+=10;
+                        RequestQueue queue = Volley.newRequestQueue(Promotion.this);
+                                    queue.add(paymentaDD);
+                    }else{
+                        Toast.makeText(Promotion.this, "Not a valid promotion code", Toast.LENGTH_SHORT).show();
                     }
-                } catch (JSONException e) {
-                    e.printStackTrace();
+
+                    promCode.setText("");
                 }
-            }
-        };
-        paymentRequest paymentrequest = new paymentRequest(userID, responseListener);
-        RequestQueue queue = Volley.newRequestQueue(Promotion.this);
-        queue.add(paymentrequest);
-
-        submit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Response.Listener<String> responseListener = new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONObject jsonResponse = new JSONObject(response);
-                            boolean success = jsonResponse.getBoolean("success");
-                            if (success) {
-                                Toast.makeText(Promotion.this, "10 dollar add in wallet", Toast.LENGTH_SHORT).show();
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                };
-                paymentADD paymentaDD = new paymentADD(userID, Integer.toString(moneyleft+10), responseListener);
-                moneyleft+=10;
-                RequestQueue queue = Volley.newRequestQueue(Promotion.this);
-                queue.add(paymentaDD);
-            }
-        });
+            });
     }
 }

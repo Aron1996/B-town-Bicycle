@@ -4,28 +4,44 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background_new"
  >
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="28dp"
+        android:layout_marginRight="28dp"
+        android:src="@drawable/logo"
+        android:id="@+id/imageView" />
 
     <EditText
         android:id="@+id/bar_userName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/Register"
+        android:layout_above="@+id/phoneNumber"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="138dp"
+        android:backgroundTint="@color/graylight"
         android:ems="10"
         android:hint="User Name"
-        android:inputType="textPersonName" />
+        android:inputType="textPersonName"
+        android:textColor="@color/graylight"
+        android:textColorHint="@color/graylight" />
 
     <Button
         android:id="@+id/Register"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="220dp"
+        android:layout_height="40dp"
         android:layout_above="@+id/haveAccount"
         android:layout_centerHorizontal="true"
-        android:background="#F07F5B"
+        android:textColor="@color/graylight"
+        android:background="@drawable/border"
         android:onClick="OnMainToLoginButton"
-        android:text="Register" />
+        android:text="Register"
+        android:layout_marginBottom="8dp"/>
 
     <TextView
         android:id="@+id/haveAccount"
@@ -33,75 +49,56 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="11dp"
+        android:layout_marginBottom="8dp"
         android:onClick="OnMainToLoginTextView"
         android:text="Have An Account?"
-        android:textSize="18sp" />
+        android:textColor="@color/graylight"
+        android:textSize="13sp" />
 
     <EditText
         android:id="@+id/phoneNumber"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/bar_userName"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="47dp"
+        android:layout_above="@+id/password"
+        android:layout_alignLeft="@+id/bar_userName"
+        android:layout_alignStart="@+id/bar_userName"
+        android:backgroundTint="@color/graylight"
         android:ems="10"
         android:hint="Phone Number"
-        android:inputType="phone" />
+        android:inputType="phone"
+        android:textColor="@color/graylight"
+        android:textColorHint="@color/graylight" />
 
     <EditText
         android:id="@+id/password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/ConfirmPassord"
         android:layout_alignLeft="@+id/phoneNumber"
         android:layout_alignStart="@+id/phoneNumber"
-        android:layout_below="@+id/phoneNumber"
+        android:backgroundTint="@color/graylight"
         android:ems="10"
         android:hint="Password "
-        android:inputType="textPassword" />
+        android:inputType="textPassword"
+        android:textColor="@color/graylight"
+        android:textColorHint="@color/graylight" />
 
     <EditText
         android:id="@+id/ConfirmPassord"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/Register"
         android:layout_alignLeft="@+id/password"
         android:layout_alignStart="@+id/password"
-        android:layout_below="@+id/password"
+        android:layout_marginBottom="8dp"
+        android:backgroundTint="@color/graylight"
         android:ems="10"
         android:hint="Confirm Password"
-        android:inputType="textPassword" />
+        android:inputType="textPassword"
+        android:textColor="@color/graylight"
+        android:textColorHint="@color/graylight" />
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="140dp"
-        android:layout_height="100dp"
-        android:layout_above="@+id/imageView2"
-        android:layout_toLeftOf="@+id/imageView4"
-        android:layout_toStartOf="@+id/imageView4"
-        android:scaleType="center"
-        android:visibility="visible"
-        app:srcCompat="@drawable/l" />
 
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="400dp"
-        android:layout_height="200dp"
-        android:layout_above="@+id/bar_userName"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        app:srcCompat="@drawable/samplegates" />
-
-    <ImageView
-        android:id="@+id/imageView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/imageView2"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="14dp"
-        android:layout_marginRight="14dp"
-        app:srcCompat="@drawable/t" />
 
 
 </RelativeLayout>

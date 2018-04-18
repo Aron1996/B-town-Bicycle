@@ -5,6 +5,9 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -30,22 +33,24 @@ import java.util.Map;
 
 public class Trip extends AppCompatActivity {
 
-    ListView listView;
-    String userID, username, phonenumber, date_ride, id, duration, cost;
+    RecyclerView RecyclerViewArrayAdapter;
+    String userID, username, phonenumber, date_ride, id, duration, cost, distance;
     ArrayList<Tripentry> tripList;
     Tripentry trip;
-    ThreeColumn_ListAdapter adapter;
+    RecyclerViewArrayAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trip);
 
-        listView = (ListView) findViewById(R.id.lv);
+
+        RecyclerViewArrayAdapter = (RecyclerView) findViewById(R.id.trip_recyclerview);
         tripList = new ArrayList<>();
 
-        adapter = new ThreeColumn_ListAdapter(Trip.this, R.layout.list_adapter_view, tripList);
-        listView.setAdapter(adapter);
+        adapter = new RecyclerViewArrayAdapter(R.layout.trip_history, tripList);
+        RecyclerViewArrayAdapter.setLayoutManager(new LinearLayoutManager(this));
+        RecyclerViewArrayAdapter.setAdapter(adapter);
 
         SharedPreferences sharedPref = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
 
@@ -66,14 +71,15 @@ public class Trip extends AppCompatActivity {
                     if (jArray.length() == 0) {
                         Toast.makeText(Trip.this, "Doesn't have any record yet", Toast.LENGTH_SHORT).show();
                     } else {
-                        for (int i = 0; i < jArray.length(); i++) {
+                        for (int i = jArray.length(); i >=0; i--) {
                             try {
                                 JSONObject oneObject = jArray.getJSONObject(i);
                                 date_ride = oneObject.getString("date_ride");
                                 id = oneObject.getString("bike_id");
                                 duration = oneObject.getString("duration");
                                 cost = oneObject.getString("cost");
-                                trip = new Tripentry(date_ride, id, duration, cost);
+                                distance = oneObject.getString("distance");
+                                trip = new Tripentry(date_ride, id,distance, cost,duration);
 
                                 tripList.add(trip);
 
@@ -99,11 +105,13 @@ class Tripentry {
     private String id;
     private String distance;
     private String cost;
-    public Tripentry(String date_ride,String id_ride, String distance_ride, String cost_ride){
+    private String bike_duration;
+    public Tripentry(String date_ride,String id_ride, String distance_ride, String cost_ride, String duration){
         date = date_ride;
         id = id_ride;
         distance = distance_ride;
         cost = cost_ride;
+        bike_duration = duration;
     }
 
     public String getDate() {
@@ -138,6 +146,13 @@ class Tripentry {
         this.cost = cost;
     }
 
+    public String getDuration() {
+        return bike_duration;
+    }
+
+    public void setDuration(String duration) {
+        this.bike_duration = duration;
+    }
 }
 class TripRequest extends StringRequest {
     private static final String LOGIN_REQUEST_URL = "http://cgi.soic.indiana.edu/~yaokzhan/team32/riding.php";
