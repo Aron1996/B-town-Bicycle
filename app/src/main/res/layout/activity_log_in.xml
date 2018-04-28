@@ -65,7 +65,8 @@
         android:hint="Password"
         android:inputType="textPassword"
         android:text="asdf"
-        android:textColor="@color/graylight" />
+        android:textColor="@color/graylight"
+        android:textColorHint="@color/graylight"/>
 
 
 

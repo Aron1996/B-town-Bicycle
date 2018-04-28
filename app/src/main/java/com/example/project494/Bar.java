@@ -8,12 +8,16 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Picture;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Environment;
 import android.os.SystemClock;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -60,21 +64,31 @@ import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.paypal.android.sdk.payments.PayPalConfiguration;
 import com.paypal.android.sdk.payments.PayPalPayment;
 import com.paypal.android.sdk.payments.PayPalService;
 import com.paypal.android.sdk.payments.PaymentActivity;
 import com.paypal.android.sdk.payments.PaymentConfirmation;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -91,13 +105,15 @@ public class Bar extends AppCompatActivity
 
     AlertDialog.Builder builder;
     private GoogleMap mMap;
+    private FirebaseStorage storage;
+    private StorageReference storageReference;
     GoogleApiClient mGoogleApiClient;
     Location mLastLocation;
     Marker mCurrLocationMarker;
     LocationRequest mLocationRequest;
     ImageView user;
     TextView userName;
-    String status, unlock, userID, value;
+    String status, unlock, userID, value, username;
     SharedPreferences sharedPref;
     Double lat, longi;
     LatLng now, now2, now3, start, end ;
@@ -109,6 +125,7 @@ public class Bar extends AppCompatActivity
     Button useBicycle, stopuseBicycle;
     Chronometer myChronometer;
     DatabaseReference myRef;
+    ImageView userHead;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -120,19 +137,20 @@ public class Bar extends AppCompatActivity
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         myRef = database.getReference("Location");
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
 
 
         Intent intent = getIntent();
-        String username = intent.getStringExtra("username");
+        username = intent.getStringExtra("username");
         userID = intent.getStringExtra("userID");
-
         topbar = (LinearLayout) findViewById(R.id.topbar);
         topbar2 = (LinearLayout) findViewById(R.id.topbar2);
         con = (TextView) findViewById(R.id.condition);
         useBicycle = (Button) findViewById(R.id.use);
         stopuseBicycle = (Button) findViewById(R.id.stop);
         myChronometer = (Chronometer) findViewById(R.id.chronometer);
-
+        userHead = (ImageView)findViewById(R.id.userHead);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         View hView = navigationView.getHeaderView(0);
@@ -147,6 +165,7 @@ public class Bar extends AppCompatActivity
         });
         userName = (TextView) hView.findViewById(R.id.bar_userName);
         userName.setText(username);
+        downLoadImage();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -163,7 +182,10 @@ public class Bar extends AppCompatActivity
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
     }
+
+
 
     @Override
     public void onBackPressed() {
@@ -200,6 +222,53 @@ public class Bar extends AppCompatActivity
         }
 
         return super.onOptionsItemSelected(item);
+    }
+    public void downLoadImage(){
+
+
+        StorageReference ref = storageReference.child("images/"+username);
+        try {
+            final File localFile = File.createTempFile("Images", "bmp");
+            ref.getFile(localFile).addOnSuccessListener(new OnSuccessListener< FileDownloadTask.TaskSnapshot >() {
+                @Override
+                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    Bitmap my_image = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                    Bitmap downloadImage = ImageConverter.getRoundedCornerBitmap(my_image, 100);
+                    try {
+                        storeImage(downloadImage);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(Bar.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+    private void storeImage(Bitmap pictureBitmap) throws IOException {
+//        String path = Environment.getExternalStorageDirectory().toString();
+        OutputStream fOut = null;
+        Integer counter = 0;
+        File file = new File(Environment.getExternalStorageDirectory()+"/FitnessGirl.jpg"); // the File to save , append increasing numeric counter to prevent files from getting overwritten.
+        fOut = new FileOutputStream(file);
+
+//        Bitmap pictureBitmap = getImageBitmap(myurl); // obtaining the Bitmap
+        pictureBitmap.compress(Bitmap.CompressFormat.JPEG, 85, fOut); // saving the Bitmap to a file compressed as a JPEG with 85% compression rate
+        fOut.flush(); // Not really required
+        fOut.close(); // do not forget to close the stream
+        Log.e("aa","Path="+file.getAbsolutePath());
+        MediaStore.Images.Media.insertImage(getContentResolver(),file.getAbsolutePath(),file.getName(),file.getName());
+        try {
+            Picasso.get().load(new File("/storage/emulated/0/FitnessGirl.jpg")).into(user);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -369,8 +438,8 @@ public class Bar extends AppCompatActivity
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(now));
-                mMap.animateCamera(CameraUpdateFactory.zoomTo(16));
+//                mMap.moveCamera(CameraUpdateFactory.newLatLng(now));
+//                mMap.animateCamera(CameraUpdateFactory.zoomTo(16));
                 topbar.setVisibility(View.INVISIBLE);
             }
         });

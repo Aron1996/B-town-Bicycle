@@ -18,22 +18,23 @@
             android:background="@color/orange"
             android:orientation="vertical">
 
-            <ImageView
+            <de.hdodenhof.circleimageview.CircleImageView
                 android:layout_width="110dp"
                 android:layout_height="110dp"
                 android:layout_gravity="center_horizontal"
+                android:id="@+id/profile"
                 android:layout_marginTop="20dp"
-                android:src="@drawable/batman" />
-
+                android:src="@drawable/batman"
+                android:onClick="selectClick"/>
             <TextView
                 android:id="@+id/username"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="15dp"
                 android:text="Batman"
                 android:textColor="#fff"
                 android:textSize="25sp"
+                android:layout_marginTop="10dp"
                 android:textStyle="bold" />
         </LinearLayout>
     </RelativeLayout>
