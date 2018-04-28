@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,6 +45,7 @@ public class Trip extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trip);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         RecyclerViewArrayAdapter = (RecyclerView) findViewById(R.id.trip_recyclerview);
         tripList = new ArrayList<>();
@@ -97,6 +99,16 @@ public class Trip extends AppCompatActivity {
         TripRequest tripRequest = new TripRequest(userID, responseListener);
         RequestQueue queue = Volley.newRequestQueue(Trip.this);
         queue.add(tripRequest);
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
 class Tripentry {
