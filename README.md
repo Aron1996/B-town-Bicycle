@@ -1,6 +1,6 @@
 # Project Title Btown Bicycle
 <p align="center">
-    <img width="500" height="auto" src="Poster.pdf" alt="Btown Bicycle" />
+    <img width="500" height="auto" src="Poster.jpg" alt="Btown Bicycle" />
 </p>
 
 # Team
